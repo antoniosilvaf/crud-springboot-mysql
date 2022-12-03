@@ -2,6 +2,8 @@ package com.springcrud.springcrud.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,8 @@ public class User implements Serializable {
     private LocalDate birthDate;
     private String email;
     private String password;
+
+    private List<Post> posts = new ArrayList<>();
 
     public User() {
     }
@@ -81,6 +85,10 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public List<Post> getPosts() {
+        return posts;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -105,6 +113,4 @@ public class User implements Serializable {
             return false;
         return true;
     }
-
-    
 }

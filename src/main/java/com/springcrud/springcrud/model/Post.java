@@ -3,12 +3,19 @@ package com.springcrud.springcrud.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "posts")
 public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -18,6 +25,10 @@ public class Post implements Serializable {
     private String title;
     private String text;
     private LocalDateTime time;
+    
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     public Post() {

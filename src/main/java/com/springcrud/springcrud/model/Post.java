@@ -79,11 +79,11 @@ public class Post implements Serializable {
         this.time = time;
     }
 
-    public User getuser() {
+    public User getUser() {
         return user;
     }
 
-    public void setuser(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

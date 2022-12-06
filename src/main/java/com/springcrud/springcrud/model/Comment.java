@@ -49,14 +49,6 @@ public class Comment implements Serializable {
         return id;
     }
 
-    public User getuser() {
-        return user;
-    }
-
-    public void setuser(User user) {
-        this.user = user;
-    }
-
     public String getText() {
         return text;
     }

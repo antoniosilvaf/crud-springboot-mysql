@@ -7,9 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,21 +21,24 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String name;
     private String phone;
-    private LocalDate birthDate;
     private String email;
     private String password;
+    private LocalDate birthDate;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
 
     public User() {
     }
 
-    public User(Integer id, String name, String phone, LocalDate birthDate, String email, String password) {
+    public User(Long id, String name, String phone, LocalDate birthDate, String email, String password) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -46,12 +47,8 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -96,6 +93,10 @@ public class User implements Serializable {
 
     public List<Post> getPosts() {
         return posts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     @Override

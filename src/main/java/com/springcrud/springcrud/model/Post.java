@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,40 +17,42 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String title;
     private String text;
     private LocalDateTime time;
-    
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = true)
-    private User author;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
     public Post() {
     }
     
-    public Post(Integer id, String title, String text, LocalDateTime time, User author) {
+    public Post(Long id, String title, String text, LocalDateTime time, User user) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.time = time;
-        this.author = author;
+        this.user = user;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -78,12 +80,12 @@ public class Post implements Serializable {
         this.time = time;
     }
 
-    public User getAuthor() {
-        return author;
+    public User getuser() {
+        return user;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setuser(User user) {
+        this.user = user;
     }
 
     public List<Comment> getComments() {

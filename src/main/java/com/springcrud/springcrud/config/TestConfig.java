@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.springcrud.springcrud.model.Comment;
 import com.springcrud.springcrud.model.Post;
 import com.springcrud.springcrud.model.User;
+import com.springcrud.springcrud.repository.CommentRepository;
 import com.springcrud.springcrud.repository.PostRepository;
 import com.springcrud.springcrud.repository.UserRepository;
 
@@ -26,27 +27,41 @@ public class TestConfig implements CommandLineRunner {
     @Autowired 
     PostRepository postRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
         DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter fmt2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
+        commentRepository.deleteAll();
+        postRepository.deleteAll();
         userRepository.deleteAll();
 
         User user1 = new User(null, "Antonio Silva", "82999999999", LocalDate.parse("19/09/2003", fmt1), "antonio@gmail.com", "123654");
         User user2 = new User(null, "Sergio Filho", "82999999999", LocalDate.parse("15/05/1999", fmt1), "sergio@gmail.com", "456321");
         
+        userRepository.saveAll(Arrays.asList(user1, user2));
+
         Post post1 = new Post(null, "Good Morning", "What a beautiful day", LocalDateTime.parse("10/10/2022 14:15:12", fmt2), user1);  
         Post post2 = new Post(null, "Happy Birthday!", "Hapy Birthday Antonio!", LocalDateTime.parse("19/09/2022 00:00:30", fmt2), user2); 
-
-        Comment comm1 = new Comment(null, post1, "I agree :)", LocalDateTime.parse("10/10/2022 14:31:01", fmt2), user2);
-        Comment comm2 = new Comment(null, post2, "Thank you", LocalDateTime.parse("19/09/2022 08:13:46", fmt2), user1);
+        
+        Comment comm1 = new Comment(null, user2, "I agree :)", LocalDateTime.parse("10/10/2022 14:31:01", fmt2), post1);
+        Comment comm2 = new Comment(null, user1, "Thank you", LocalDateTime.parse("19/09/2022 08:13:46", fmt2), post2);
 
         post1.getComments().add(comm1);
         post2.getComments().add(comm2);
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
         postRepository.saveAll(Arrays.asList(post1, post2));
+        
+        user1.getPosts().add(post1);
+        user2.getPosts().add(post2);
+        
+        commentRepository.saveAll(Arrays.asList(comm1, comm2));
+        userRepository.saveAll(Arrays.asList(user1, user2));
+        
+        
     }
 }

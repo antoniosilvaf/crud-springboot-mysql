@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,50 +13,48 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
-
 @Entity
 @Table(name = "comments")
 public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String text;
+    private LocalDateTime moment;
 
     @JsonIgnore
-    private User author;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Comment(Object object, Post post1, String string, LocalDateTime localDateTime, User user2) {
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+    
+    public Comment() {
     }
 
-    public Comment(Integer id, Post post, String text, User author) {
+    public Comment(Long id, User user, String text, LocalDateTime moment, Post post) {
         this.id = id;
-        this.post = post;
+        this.user = user;
         this.text = text;
-        this.author = author;
+        this.moment = moment;
+        this.post = post;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public User getuser() {
+        return user;
     }
 
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
+    public void setuser(User user) {
+        this.user = user;
     }
 
     public String getText() {
@@ -68,12 +65,55 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public User getAuthor() {
-        return author;
+    public LocalDateTime getMoment() {
+        return moment;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setMoment(LocalDateTime moment) {
+        this.moment = moment;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Comment other = (Comment) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    
     
 }

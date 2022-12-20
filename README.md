@@ -1,6 +1,6 @@
 # CRUD Spring Boot
 
-Simples CRUD to manage users, posts and comments.
+Simple CRUD to manage users, posts and comments.
 
 ### Technologies used
 
